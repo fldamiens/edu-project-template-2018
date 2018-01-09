@@ -19,3 +19,6 @@
 * [node-uuid](https://www.npmjs.com/package/node-uuid)
 * [frisby](https://www.npmjs.com/package/frisby)
 * [node-find-files](https://www.npmjs.com/package/node-find-files)
+
+Florent Damiens - florent.damiens@etu.udamail.fr
+Guillaume Mariot - guillaume.mariot@etu.uca.fr
