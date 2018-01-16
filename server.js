@@ -18,7 +18,7 @@ var server = {
         this.process.stderr.addListener('data', function (data) {
             sys.print(data);
         });
-        
+
         this.process.addListener('exit', function (code) {
             console.log('Child process exited: ' + code);
             this.process = null;
