@@ -24,6 +24,20 @@ router.get('/', function(req, res) {
   });
 });
 
+//get an episode
+router.get('/:id', function(req, res) {
+    file.find(req, res, req.params.id,function(obj){
+      res.status(obj['status']).json(obj);
+    });
+});
+
+//delete an episode
+router.delete('/:id', function(req, res) {
+    file.delete(req, res, req.params.id,function(obj){
+      res.status(obj['status']).json(obj);
+    });
+});
+
 // define the post api episodes
 router.post('/', function(req, res) {
   if(Object.keys(req.body).length != 3){
