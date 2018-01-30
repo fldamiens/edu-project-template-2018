@@ -1,143 +1,97 @@
 var fs = require('fs');
 var FindFiles = require("node-find-files");
 
-function createEpisode(req, res, data, cb){
-  var message, status;
-  var obj = {};
-  var path = "data/episode_"+data['id'];
-  if(fs.existsSync(path)){
-    cb({data : data, result : "error", message : "Error the file already exist", status : 400});
-  }else{
-    fs.writeFile(path,JSON.stringify(data),function(err){
-      var obj = {};
-      if(err){
-        obj['status'] = 400;
-        obj['message'] = "Error during the file creation";
-        obj['result'] = "error"
-      }else {
-        obj['status'] = 200;
-        obj['message'] = "The file was correctly created";
-        obj['result'] = "success"
-      }
-      cb({data : data, result : obj['result'], message : obj['message'], status : obj['status']});
-    })
-  }
+function readFile(path){
+  return new Promise(function(resolve,reject){
+    fs.readFile(path, 'utf-8', function (err, res){
+      if (err)  reject({status : 400, result : "error", message : "Error when oppening the file"});
+      else resolve({status : 200, result : "success", data : JSON.parse(res)});
+    });
+  });
 }
 
-function findAll(cb){
-  var message, status;
-  var obj = {}
-  var dirname = "data/";
-  fs.readdir(dirname,function(err,filenames){
-    if(err){
-      obj['message'] = "Error when oppening the directory";
-      obj['status'] = 400;
-      obj['result'] = "error";
-      cb(obj);
-    }
-    obj["data"] = [];
-    var promise = new Promise(function(resolve,reject){
-      var cpt = 0;
-      filenames.forEach(function(filename){
-        fs.readFile(dirname+filename,'utf-8',function(err,content){
-          if(err){
-            obj['status'] = 400;
-            obj['result'] = "error";
-            obj['message'] = "Error when oppening the file";
-            cb(obj);
-          }
-          obj["data"].push(JSON.parse(content));
-          cpt++;
-          if(cpt==filenames.length){
-            resolve(obj);
-          }
-        })
+function createEpisode(data){
+  return new Promise(function(resolve,reject){
+    if(!("name" in data) || !("code" in data) || !("score" in data)){
+      reject({result : "error", message : 'Wrong parameters keys in the request'});
+    }else if((typeof(data["name"]) != 'string' && data["name"].length != 0) || (typeof(data["code"]) != 'string' && data["code"].length != 0)){
+      reject({result : "error", message : 'Illegal value in the request'});
+    }else if(isNaN(parseFloat(data["score"])) ||  (typeof(parseFloat(data["score"])) != "number")){
+      reject({result : "error", message : 'Illegal value in the score parameters'});
+    }else if(data["score"] < 0 || data["score"] > 10){
+      reject({result : "error", message : 'Illegal value in the score parameters'});
+    }else if(fs.existsSync("data/episode_"+data['id'])){
+      reject({data : data, result : "error", message : "Error the file already exist", status : 400});
+    }else{
+      fs.writeFile("data/episode_"+data['id'],JSON.stringify(data),function(err){
+        if(err) reject({data : data, result : "error", message : "Error during the file creation", status : 400});
+        else resolve({data : data, result : "success", message : "The file was correctly created", status : 200});
       });
-    });
-    promise.then(function(data){
-      cb(data);
-    })
-  })
+    }
+  });
 }
 
-function find(req, res, id, cb){
-  var dirname = "data/";
-  var obj = {status : 400, result : "error", message : "No data found"};
-  fs.readdir(dirname,function(err,filenames){
-    if(err){
-      obj['message'] = "Error when oppening the directory";
-      obj['status'] = 400;
-      obj['result'] = "error";
-      cb(obj);
-    }
-    var promise = new Promise(function(resolve,reject){
-      var cpt = 0;
-      filenames.forEach(function(filename){
-        fs.readFile(dirname+filename,'utf-8',function(err,content){
-          if(err){
-            obj['status'] = 400;
-            obj['result'] = "error";
-            obj['message'] = "Error when oppening the file";
-            cb(obj);
-          }else{
-            cpt++;
-            var file_id = filename.split("_")[1];
-            if(id == file_id){
-              resolve({status : 200, result : "success", data : JSON.parse(content)});
-            }
-            if(cpt == filenames.length){
-              resolve(obj);
-            }
-          }
-        })
-      });
+function findAll(){
+  return new Promise(function(resolve,reject){
+    fs.readdir('data/',function(err,filenames){
+      let files = [];
+      Promise.all(filenames.map(function(filename) {
+        return readFile('data/'+filename).then(function(result){
+          files.push(result);
+        },function(err){
+          reject(err);
+        });
+      })).then(function(results) {
+        resolve(files);
+      })
     });
-    promise.then(function(obj){
-      cb(obj);
-    })
-  })
+  });
 }
 
-function deleteFile(req, res, id, cb){
-  var dirname = "data/";
-  var obj = {status : 400, result : "error", message : "No file found"};
-  fs.readdir(dirname,function(err,filenames){
-    if(err){
-      obj['message'] = "Error when oppening the directory";
-      obj['status'] = 400;
-      obj['result'] = "error";
-      cb(obj);
-    }
-    var promise = new Promise(function(resolve,reject){
-      var cpt = 0;
-      filenames.forEach(function(filename){
-        fs.readFile(dirname+filename,'utf-8',function(err,content){
-          if(err){
-            obj['status'] = 400;
-            obj['result'] = "error";
-            obj['message'] = "Error when oppening the file";
-            cb(obj);
-          }else{
-            cpt++;
-            var file_id = filename.split("_")[1];
-            if(id == file_id){
-              fs.unlink(dirname + filename);
-              resolve({status : 200, result : "success", data : JSON.parse(content)});
-            }
-            if(cpt == filenames.length){
-              resolve(obj);
-            }
-          }
-        })
-      });
+function find(id){
+  return new Promise(function(resolve,reject){
+    readFile('data/episode_'+id);
+  });
+}
+
+function deleteFile(id){
+  return new Promise(function(resolve,reject){
+    readFile("data/episode_"+id).then(function(succ){
+      fs.unlink("data/episode_"+id);
+      resolve(succ);
+    },function(err){
+      reject(err);
     });
-    promise.then(function(obj){
-      cb(obj);
-    })
-  })
+  });
+}
+
+function updateFile(episode){
+  return new Promise(function(resolve,reject){
+    readFile("data/episode_"+episode['id']).then(function(succ){
+      updatedEpisode = {
+        id : episode['id'],
+        code : (typeof(episode['code']) != 'undefined' ? episode['code'] : succ.data['code'] ),
+        score : (typeof(episode['score']) != 'undefined' ? episode['score'] : succ.data['score']),
+        name : (typeof(episode['name']) != 'undefined'? episode['name'] : succ.data['name']),
+      };
+      deleteFile(episode['id']).then(function(succ){
+        createEpisode(updatedEpisode).then(function(succ){
+          resolve(succ);
+        },function(err){
+          createEpisode(succ.data);
+          reject(err);
+        });
+      },function(err){
+        reject(err);
+      })
+    },function(err){
+      reject(err);
+    });
+  });
 }
 
 module.exports.createEpisode = createEpisode;
 module.exports.findAll = findAll;
 module.exports.find = find;
 module.exports.delete = deleteFile;
+module.exports.updateFile = updateFile;
