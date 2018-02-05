@@ -10,7 +10,7 @@ function readFile(path){
   });
 }
 
-function createEpisode(data){
+function createEpisode(data, path = "data"){
   return new Promise(function(resolve,reject){
     if(!("name" in data) || !("code" in data) || !("score" in data)){
       reject({result : "error", message : 'Wrong parameters keys in the request'});
@@ -23,7 +23,7 @@ function createEpisode(data){
     }else if(fs.existsSync("data/episode_"+data['id'])){
       reject({data : data, result : "error", message : "Error the file already exist", status : 400});
     }else{
-      fs.writeFile("data/episode_"+data['id'],JSON.stringify(data),function(err){
+      fs.writeFile(path + "/episode_"+data['id'],JSON.stringify(data),function(err){
         if(err) reject({data : data, result : "error", message : "Error during the file creation", status : 400});
         else resolve({data : data, result : "success", message : "The file was correctly created", status : 200});
       });
@@ -31,12 +31,12 @@ function createEpisode(data){
   });
 }
 
-function findAll(){
+function findAll(path = "data"){
   return new Promise(function(resolve,reject){
-    fs.readdir('data/',function(err,filenames){
+    fs.readdir(path + '/',function(err,filenames){
       let files = [];
       Promise.all(filenames.map(function(filename) {
-        return readFile('data/'+filename).then(function(result){
+        return readFile(path + '/'+filename).then(function(result){
           files.push(result);
         },function(err){
           reject(err);
@@ -48,15 +48,15 @@ function findAll(){
   });
 }
 
-function find(id){
+function find(id, path = "data"){
   return new Promise(function(resolve,reject){
-    readFile('data/episode_'+id);
+    readFile(path + '/episode_'+id);
   });
 }
 
-function deleteFile(id){
+function deleteFile(id, path = "data"){
   return new Promise(function(resolve,reject){
-    readFile("data/episode_"+id).then(function(succ){
+    readFile(path + "/episode_"+id).then(function(succ){
       fs.unlink("data/episode_"+id);
       resolve(succ);
     },function(err){
