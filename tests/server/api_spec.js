@@ -63,6 +63,19 @@ describe('Method: GET / Path: /:id', function(){
 describe('Method: DELETE / Path: /:id', function(){
   it ('Delete one episode - return 200', function (done) {
     frisby.del(URL + '/4')
+    .expect('jsonTypes', {
+      'result': Joi.string(),
+      'message': {
+          'data': {
+            'id': Joi.string(),
+            'code': Joi.string(),
+            'score': Joi.string(),
+            'name': Joi.string()
+          },
+          'result': Joi.string(),
+          'status': Joi.number()
+      }
+    })
       .expect('status', 200)
       .done(done);
   });
@@ -86,6 +99,20 @@ describe('Method: POST / Path: /', function(){
         'name': 'Post an episode',
         'code': 'S01E01',
         'score': '5'
+      })
+      .expect('jsonTypes', {
+        'result': Joi.string(),
+        'message': {
+            'data': {
+              'id': Joi.string(),
+              'code': Joi.string(),
+              'score': Joi.string(),
+              'name': Joi.string()
+            },
+            'result': Joi.string(),
+            'message': Joi.string(),
+            'status': Joi.number()
+        }
       })
       .expect('status', 200)
       .done(done);
