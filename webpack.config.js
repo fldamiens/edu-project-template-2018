@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const PATHS  = {
     app: path.join(__dirname, 'src/app'),
@@ -37,13 +38,21 @@ const common = {
               ], "react"]
             }
           }
+        },
+        {
+          test: /\.css$/,
+          use:ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: "css-loader"
+          })
         }
       ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: path.join(__dirname)+'/index.ejs'
-        })
+        }),
+        new ExtractTextPlugin("style.css"),
     ]
 }
 

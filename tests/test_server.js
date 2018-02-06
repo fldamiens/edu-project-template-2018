@@ -1,11 +1,11 @@
 const child_process = require('child_process');
 const path = require('path');
 const sys = require("util");
-const fs = require('fs');
+const fs = require('fs-extra');
 
 const port = 4598;
-
 const pathData = path.join(__dirname, 'server/data');
+fs.mkdir(pathData);
 
 const server = child_process.spawn(
     'node',
@@ -37,6 +37,12 @@ setTimeout(function() {
 
     test.on('close', function(code) {
         console.log('Close Server');
+        fs.remove(pathData,function(err){
+          if(err)
+            console.log(err);
+          else
+            console.log("Directory has been deleted");
+        })
         server.kill();
     });
 

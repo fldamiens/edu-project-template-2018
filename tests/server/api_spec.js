@@ -6,33 +6,30 @@ const fs = require('fs-extra');
 const uuid = require('node-uuid');
 const path = require('path');
 
-const pathData = path.join(__dirname, 'server/data');
+/* ----------- TODO ---------- */
+//Verifier que le fichier est bien dans data !
 
-/* -------------- IMPORTANT ----------- */
-// Il faut commenter la ligne 5 et décommenter la ligne 6
-
-
-/*
-beforeAll(function () {
-  for(i=0; i<3; i++){
+beforeAll(function (done) {
+  for(i=1; i<10; i++){
     var tmp = {}
-    tmp['id'] = i;
+    tmp['id'] = i+"";
     tmp['code'] = "S01E0" + i;
     tmp['score'] = i;
     tmp['name'] = 'Test' + i;
-    file.createEpisode(tmp, "tests/server/data")
+    file.createEpisode(tmp);
   }
+  done();
 });
 
-afterAll(function () {
+afterAll(function (done) {
   file.findAll("tests/server/data").then(function(data){
     data.forEach(function(elt){
-      file.delete(elt.data.id, "tests/server/data")
+      file.delete(elt.data.id);
     })
   })
+  done();
 });
 
-*/
 describe('Method: GET / Path: /', function () {
   it ('Find all episode - return 200 OK', function (done) {
     frisby.get(URL + '/')
@@ -50,12 +47,12 @@ describe('Method: GET / Path: /:id', function(){
         'data': {
           'id': Joi.string(),
           'code': Joi.string(),
-          'score': Joi.string(),
+          'score': Joi.number(),
           'name': Joi.string()
         }
       })
+      .done(done)
       .expect('status', 200)
-      .done(done);
   });
 
   it ('Find false episode - return 400 File Not Found', function (done) {
@@ -79,7 +76,7 @@ describe('Method: DELETE / Path: /:id', function(){
           'data': {
             'id': Joi.string(),
             'code': Joi.string(),
-            'score': Joi.string(),
+            'score': Joi.number(),
             'name': Joi.string()
           },
           'result': Joi.string(),
@@ -108,7 +105,7 @@ describe('Method: POST / Path: /', function(){
     frisby.post(URL + '/', {
         'name': 'Post an episode',
         'code': 'S01E01',
-        'score': '5'
+        'score': 5
       })
       .expect('jsonTypes', {
         'result': Joi.string(),
@@ -116,7 +113,7 @@ describe('Method: POST / Path: /', function(){
             'data': {
               'id': Joi.string(),
               'code': Joi.string(),
-              'score': Joi.string(),
+              'score': Joi.number(),
               'name': Joi.string()
             },
             'result': Joi.string(),
@@ -131,7 +128,7 @@ describe('Method: POST / Path: /', function(){
     frisby.post(URL + '/', {
         'KEYS': 'An error',
         'code': 'S01E01',
-        'score': '5'
+        'score': 5
       })
       .then(function(res){
         expect(res.json.result).toBe("error");
@@ -146,7 +143,7 @@ describe('Method: POST / Path: /', function(){
 describe('Method: PUT / Path: /', function(){
   it ('Modify one episode (Name) - return 200 OK', function (done) {
     frisby.put(URL + '/', {
-        'id': 1,
+        'id': '1',
         'name': 'Modify episode 1'
       })
       .expect('jsonTypes', {
@@ -155,7 +152,7 @@ describe('Method: PUT / Path: /', function(){
             'data': {
               'id': Joi.string(),
               'code': Joi.string(),
-              'score': Joi.string(),
+              'score': Joi.number(),
               'name': Joi.string()
             },
             'result': Joi.string(),
@@ -168,7 +165,7 @@ describe('Method: PUT / Path: /', function(){
   });
   it ('Modify one episode (KEYS) - return 400', function (done) {
     frisby.put(URL + '/', {
-        'id': 3,
+        'id': '3',
         'score': 'ERROR'
       })
       .then(function(res){

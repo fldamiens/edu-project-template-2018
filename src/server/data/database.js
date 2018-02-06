@@ -1,10 +1,9 @@
-var fs = require('fs');
-var FindFiles = require("node-find-files");
+const fs = require('fs');
+const FindFiles = require("node-find-files");
+const config = require('./../config.js');
 
 /* ----------- SOURCE DES DONNEES ----------- */
-//const pathData = 'data';
-const pathData = 'tests/server/data';
-
+const pathData = config.data;
 
 function readFile(path){
   return new Promise(function(resolve,reject){
@@ -30,6 +29,7 @@ function createEpisode(data){
     }else{
       var fileName = data['id'];
       data['id'] += "";
+      data['score'] = parseFloat(data['score']);
       fs.writeFile(pathData + "/episode_"+fileName,JSON.stringify(data),function(err){
         if(err) reject({data : data, result : "error", message : "Error during the file creation", status : 400});
         else resolve({data : data, result : "success", message : "The file was correctly created", status : 200});

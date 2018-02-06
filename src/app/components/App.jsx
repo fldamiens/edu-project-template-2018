@@ -6,18 +6,29 @@ import {
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configure from './store';
+import ListEpisodes from './ListEpisodes'
+import AddFileForm from './AddFileForm'
+import Header from './Header'
+import Footer from './Footer'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const store = configure();
 
-class Yolo extends Component {
+class MainApp extends Component {
     render() {
-        return(<h1>Hello World  !!</h1>);
-    }
-};
-
-class Swag extends Component {
-    render() {
-        return(<h1>Scooby doo</h1>);
+        return(
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <ListEpisodes />
+              </div>
+              <div className="col col-lg-2">
+                  <AddFileForm />
+              </div>
+            </div>
+          </div>
+        );
     }
 };
 
@@ -27,9 +38,8 @@ export default class App extends Component {
             <Provider store={store}>
                 <Router>
                   <div>
-                    <Route path="/" component={Yolo}>
-                    </Route>
-                    <Route path="/new" component={Swag}>
+                    <Header />
+                    <Route path="/" component={MainApp}>
                     </Route>
                   </div>
                 </Router>
