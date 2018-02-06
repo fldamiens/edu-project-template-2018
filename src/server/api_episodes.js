@@ -61,4 +61,10 @@ router.put('/', function(req, res) {
   })
 });
 
+router.use(function(req, res, next) {
+    if (!req.route)
+        res.status(404).json({result : "error", message : "Route not found"});
+    next();
+});
+
 module.exports = router;

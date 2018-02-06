@@ -1,6 +1,11 @@
 var fs = require('fs');
 var FindFiles = require("node-find-files");
 
+/* ----------- SOURCE DES DONNEES ----------- */
+//const pathData = 'data';
+const pathData = 'tests/server/data';
+
+
 function readFile(path){
   return new Promise(function(resolve,reject){
     fs.readFile(path, 'utf-8', function (err, res){
@@ -10,7 +15,7 @@ function readFile(path){
   });
 }
 
-function createEpisode(data, path = "data"){
+function createEpisode(data){
   return new Promise(function(resolve,reject){
     if(!("name" in data) || !("code" in data) || !("score" in data)){
       reject({result : "error", message : 'Wrong parameters keys in the request'});
@@ -20,10 +25,12 @@ function createEpisode(data, path = "data"){
       reject({result : "error", message : 'Illegal value in the score parameters'});
     }else if(data["score"] < 0 || data["score"] > 10){
       reject({result : "error", message : 'Illegal value in the score parameters'});
-    }else if(fs.existsSync("data/episode_"+data['id'])){
+    }else if(fs.existsSync(pathData + "/episode_"+data['id'])){
       reject({data : data, result : "error", message : "Error the file already exist", status : 400});
     }else{
-      fs.writeFile(path + "/episode_"+data['id'],JSON.stringify(data),function(err){
+      var fileName = data['id'];
+      data['id'] += "";
+      fs.writeFile(pathData + "/episode_"+fileName,JSON.stringify(data),function(err){
         if(err) reject({data : data, result : "error", message : "Error during the file creation", status : 400});
         else resolve({data : data, result : "success", message : "The file was correctly created", status : 200});
       });
@@ -31,12 +38,12 @@ function createEpisode(data, path = "data"){
   });
 }
 
-function findAll(path = "data"){
+function findAll(){
   return new Promise(function(resolve,reject){
-    fs.readdir(path + '/',function(err,filenames){
+    fs.readdir(pathData + '/',function(err,filenames){
       let files = [];
       Promise.all(filenames.map(function(filename) {
-        return readFile(path + '/'+filename).then(function(result){
+        return readFile(pathData + '/'+filename).then(function(result){
           files.push(result);
         },function(err){
           reject(err);
@@ -48,16 +55,20 @@ function findAll(path = "data"){
   });
 }
 
-function find(id, path = "data"){
+function find(id){
   return new Promise(function(resolve,reject){
-    readFile(path + '/episode_'+id);
+    readFile(pathData + '/episode_'+id).then(function(result){
+      resolve(result);
+    }, function(err){
+      reject(err);
+    });
   });
 }
 
-function deleteFile(id, path = "data"){
+function deleteFile(id){
   return new Promise(function(resolve,reject){
-    readFile(path + "/episode_"+id).then(function(succ){
-      fs.unlink("data/episode_"+id);
+    readFile(pathData + "/episode_"+id).then(function(succ){
+      fs.unlink(pathData + "/episode_"+id);
       resolve(succ);
     },function(err){
       reject(err);
@@ -67,7 +78,7 @@ function deleteFile(id, path = "data"){
 
 function updateFile(episode){
   return new Promise(function(resolve,reject){
-    readFile("data/episode_"+episode['id']).then(function(succ){
+    readFile(pathData + "/episode_"+episode['id']).then(function(succ){
       updatedEpisode = {
         id : episode['id'],
         code : (typeof(episode['code']) != 'undefined' ? episode['code'] : succ.data['code'] ),
