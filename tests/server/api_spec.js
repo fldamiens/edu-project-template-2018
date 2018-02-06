@@ -44,6 +44,16 @@ describe('Method: GET / Path: /', function () {
 describe('Method: GET / Path: /:id', function(){
   it ('Find one episode - return 200 OK', function (done) {
     frisby.get(URL + '/1')
+      .expect('jsonTypes', {
+        'result': Joi.string(),
+        'status': Joi.number(),
+        'data': {
+          'id': Joi.string(),
+          'code': Joi.string(),
+          'score': Joi.string(),
+          'name': Joi.string()
+        }
+      })
       .expect('status', 200)
       .done(done);
   });
