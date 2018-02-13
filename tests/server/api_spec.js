@@ -5,9 +5,9 @@ const file = require('./../../src/server/data/database');
 const fs = require('fs-extra');
 const uuid = require('node-uuid');
 const path = require('path');
+const config = require('./../../src/server/config.js');
 
-/* ----------- TODO ---------- */
-//Verifier que le fichier est bien dans data !
+const pathData = config.data;
 
 beforeAll(function (done) {
   for(i=1; i<10; i++){
@@ -68,24 +68,38 @@ describe('Method: GET / Path: /:id', function(){
 });
 
 describe('Method: DELETE / Path: /:id', function(){
+  let id;
   it ('Delete one episode - return 200', function (done) {
     frisby.del(URL + '/4')
-    .expect('jsonTypes', {
-      'result': Joi.string(),
-      'message': {
-          'data': {
-            'id': Joi.string(),
-            'code': Joi.string(),
-            'score': Joi.number(),
-            'name': Joi.string()
-          },
-          'result': Joi.string(),
-          'status': Joi.number()
-      }
-    })
+      .expect('jsonTypes', {
+        'result': Joi.string(),
+        'message': {
+            'data': {
+              'id': Joi.string(),
+              'code': Joi.string(),
+              'score': Joi.number(),
+              'name': Joi.string()
+            },
+            'result': Joi.string(),
+            'status': Joi.number()
+        }
+      })
       .expect('status', 200)
+      .then(function(res){
+        id = res.body.message.data.id;
+      })
       .done(done);
   });
+
+  it ('Check if the file has been deleted', (done) => {
+       fs.stat(path.join(pathData, `episode_${id}`), (err, stats) => {
+         if (err  || !stats.isFile()) {
+           done();
+         }else{
+           fail();
+         }
+       });
+   });
 
   it ('Delete one false episode - return 400 File Not Found', function (done) {
     frisby.del(URL + '/false')
@@ -101,6 +115,7 @@ describe('Method: DELETE / Path: /:id', function(){
 });
 
 describe('Method: POST / Path: /', function(){
+  let id;
   it ('Post one episode - return 200 OK', function (done) {
     frisby.post(URL + '/', {
         'name': 'Post an episode',
@@ -121,9 +136,22 @@ describe('Method: POST / Path: /', function(){
             'status': Joi.number()
         }
       })
-      .expect('status', 200)
+      .expect('status', 201)
+      .then(function(res){
+        id = res.body.message.data.id;
+      })
       .done(done);
   });
+
+  it ('Check if the file has been created', (done) => {
+       fs.stat(path.join(pathData, `episode_${id}`), (err, stats) => {
+         if (err  || !stats.isFile()) {
+           fail();
+         }
+         done();
+       });
+   });
+
   it ('Post one episode with error in keys - return 400', function (done) {
     frisby.post(URL + '/', {
         'KEYS': 'An error',

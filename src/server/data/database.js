@@ -32,7 +32,7 @@ function createEpisode(data){
       data['score'] = parseFloat(data['score']);
       fs.writeFile(pathData + "/episode_"+fileName,JSON.stringify(data),function(err){
         if(err) reject({data : data, result : "error", message : "Error during the file creation", status : 400});
-        else resolve({data : data, result : "success", message : "The file was correctly created", status : 200});
+        else resolve({data : data, result : "success", message : "The file was correctly created", status : 201});
       });
     }
   });

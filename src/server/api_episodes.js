@@ -46,7 +46,7 @@ router.post('/', function(req, res) {
   episode['id'] = uuid.v4();
 
   file.createEpisode(episode).then(function(succ){
-    res.status(200).json({result : "success", message : succ});
+    res.status(201).json({result : "success", message : succ});
   },function(err){
     res.status(400).json({result : "error", message : err});
     });
