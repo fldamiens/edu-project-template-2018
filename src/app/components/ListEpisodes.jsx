@@ -10,6 +10,14 @@ import TabHeader from './TabHeader'
 import TabItems from './TabItems'
 
 class ListEpisodes extends Component {
+
+  constructor(props) {
+    super(props);
+
+  }
+  addEpisode(episode) {
+    console.log(episode);
+  }
     render() {
         return(
           <div>

@@ -9,22 +9,27 @@ import configure from './store';
 import ListEpisodes from './ListEpisodes'
 import AddFileForm from './AddFileForm'
 import Header from './Header'
-import Footer from './Footer'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const store = configure();
 
 class MainApp extends Component {
+
     render() {
+      const maFunction = (episode) => {
+        console.log('eeee');
+          console.log(episode);
+          this.listCpt.addEpisode(episode);
+      };
         return(
           <div className="container">
             <div className="row">
               <div className="col">
-                <ListEpisodes />
+                <ListEpisodes ref={list => { this.listCpt = list; }}/>
               </div>
               <div className="col col-lg-2">
-                  <AddFileForm />
+                  <AddFileForm  addEpisode={maFunction}/>
               </div>
             </div>
           </div>

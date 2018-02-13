@@ -16,6 +16,7 @@ class TabHeader extends Component {
               <th>Serie</th>
               <th>Season</th>
               <th>Episode</th>
+              <th>Action</th>
             </tr>
           </thead>
         );

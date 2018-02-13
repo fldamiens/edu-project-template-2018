@@ -116,7 +116,7 @@ describe('Method: DELETE / Path: /:id', function(){
 
 describe('Method: POST / Path: /', function(){
   let id;
-  it ('Post one episode - return 200 OK', function (done) {
+  it ('Post one episode - return 201 OK', function (done) {
     frisby.post(URL + '/', {
         'name': 'Post an episode',
         'code': 'S01E01',
