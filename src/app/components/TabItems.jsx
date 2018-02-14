@@ -20,7 +20,8 @@ class TabItems extends Component {
         method: 'DELETE',
       }).then(result => {
         result.json().then((res) => {
-          this.props.removeEpisode(res.message.data);
+            this.props.removeEpisode(res.message.data);
+            this.props.informationEpisode(res);
         })
       })
     }
@@ -34,8 +35,8 @@ class TabItems extends Component {
               <td>{this.state.episode.code}</td>
               <td>{this.state.episode.score}</td>
               <td>
-                <button style={{marginLeft:'8px'}} className="btn btn-primary" onClick={() => {this.deleteEpisode(this.state.episode.id)}} >-</button>
-                <button style={{marginLeft:'8px'}} className="btn btn-primary" onClick={() => {this.deleteEpisode(this.state.episode.id)}} >-></button>
+                <button style={{marginLeft:'8px'}} className="btn btn-primary" onClick={() => {this.deleteEpisode(this.state.episode.id)}} >Delete</button>
+                <button style={{marginLeft:'8px'}} className="btn btn-primary">Detail</button>
               </td>
             </tr>
           </tbody>

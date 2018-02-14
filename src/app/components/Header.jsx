@@ -10,7 +10,7 @@ import configure from './store';
 class Header extends Component {
     render() {
         return(
-            <nav style={{ marginBottom: '5%' }} className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav style={{ marginBottom: '3%' }} className="navbar navbar-expand-lg navbar-dark bg-dark">
             <a className="navbar-brand" href="#">BlockBuster</a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>

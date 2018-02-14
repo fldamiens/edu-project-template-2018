@@ -33,11 +33,10 @@ class AddFileForm extends Component {
       }).then(response => {
         return response.json()
       }).then((res) => {
-          if(res.result == 'error'){
-            this.props.errorOccured(res);
-          }else{
+          if(res.result != 'error'){
             this.props.addEpisode(res.message.data);
           }
+          this.props.infoOccured(res);
       })
     }
 

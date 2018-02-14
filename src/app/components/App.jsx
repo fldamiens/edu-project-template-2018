@@ -9,7 +9,9 @@ import configure from './store';
 import ListEpisodes from './ListEpisodes';
 import AddFileForm from './AddFileForm';
 import Header from './Header';
-import ShowError from './ShowError';
+import BoxInfo from './BoxInfo';
+import Footer from './Footer';
+import './Style.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,19 +24,25 @@ class MainApp extends Component {
           this.listCpt.addEpisode(episode);
       };
 
-      const showErrorMsg = (error) => {
-          this.errComponent.showErrorMessage(error.message);
+      const showMsg = (info) => {
+          this.info.showMessage(
+            {
+              message:info.message.message,
+              type: info.result
+            }
+          );
       };
 
         return(
           <div className="container">
-            <ShowError ref={errorCpt => { this.errComponent = errorCpt; }}/>
+            <h1 style={{marginBottom: '30px'}} className="text-center">Welcome to BlockBuster !</h1>
+            <BoxInfo ref={errorCpt => { this.info = errorCpt; }}/>
             <div className="row">
               <div className="col">
                 <ListEpisodes ref={list => { this.listCpt = list; }}/>
               </div>
               <div className="col col-lg-2">
-                  <AddFileForm errorOccured={showErrorMsg}  addEpisode={episodeAdded}/>
+                  <AddFileForm infoOccured={showMsg}  addEpisode={episodeAdded}/>
               </div>
             </div>
           </div>
@@ -51,6 +59,7 @@ export default class App extends Component {
                     <Header />
                     <Route path="/" component={MainApp}>
                     </Route>
+                    <Footer />
                   </div>
                 </Router>
             </Provider>

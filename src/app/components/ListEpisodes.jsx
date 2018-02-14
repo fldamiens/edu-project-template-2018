@@ -6,8 +6,9 @@ import {
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configure from './store';
-import TabHeader from './TabHeader'
-import TabItems from './TabItems'
+import TabHeader from './TabHeader';
+import TabItems from './TabItems';
+import BoxInfo from './BoxInfo'
 
 class ListEpisodes extends Component {
 
@@ -45,12 +46,22 @@ class ListEpisodes extends Component {
           this.setState({datas:newData});
       };
 
+      const infoEpisode = (information) => {
+        this.info.showMessage(
+          {
+            message:information.message.message,
+            type: information.result
+          }
+        );
+      };
+
         return(
           <div>
+            <BoxInfo ref={info => { this.info = info; }}/>
             <table className="table table-striped">
               <TabHeader />
               {this.state.datas.map(function(ep, index){
-                    return <TabItems removeEpisode={episodeRemoved} key={ep.id} crtEpisode={ep}/>;
+                    return <TabItems informationEpisode={infoEpisode} removeEpisode={episodeRemoved} key={ep.id} crtEpisode={ep}/>;
               })}
             </table>
           </div>
