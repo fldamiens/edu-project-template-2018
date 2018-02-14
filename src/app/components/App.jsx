@@ -11,7 +11,7 @@ import AddFileForm from './AddFileForm';
 import Header from './Header';
 import BoxInfo from './BoxInfo';
 import Footer from './Footer';
-import './Style.css';
+import './../style/Style.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
