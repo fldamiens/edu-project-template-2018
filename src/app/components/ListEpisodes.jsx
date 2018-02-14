@@ -13,17 +13,45 @@ class ListEpisodes extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      datas : [],
+    };
 
+    this.addEpisode = this.addEpisode.bind(this);
   }
+
   addEpisode(episode) {
-    console.log(episode);
+    let newDatas = this.state.datas.slice();
+    newDatas.push(episode);
+    this.setState({datas:newDatas});
+  }
+
+  componentDidMount(){
+    fetch('/api/episodes', {
+      method: 'GET',
+    }).then(result => {
+      return result.json();
+    }).then(data => {
+      let datas = data.message;
+      let listEp = [];
+      datas.forEach((elt) => listEp.push(elt.data));
+      this.setState({datas:listEp});
+    })
   }
     render() {
+      const episodeRemoved = (episode) => {
+          let newData = this.state.datas.slice();
+          newData = newData.filter(e => e.id !== episode.id)
+          this.setState({datas:newData});
+      };
+
         return(
           <div>
             <table className="table table-striped">
               <TabHeader />
-              <TabItems />
+              {this.state.datas.map(function(ep, index){
+                    return <TabItems removeEpisode={episodeRemoved} key={ep.id} crtEpisode={ep}/>;
+              })}
             </table>
           </div>
         );

@@ -23,7 +23,7 @@ function createEpisode(data){
     }else if(isNaN(parseFloat(data["score"])) ||  (typeof(parseFloat(data["score"])) != "number")){
       reject({result : "error", message : 'Illegal value in the score parameters'});
     }else if(data["score"] < 0 || data["score"] > 10){
-      reject({result : "error", message : 'Illegal value in the score parameters'});
+      reject({result : "error", message : 'Illegal score'});
     }else if(fs.existsSync(pathData + "/episode_"+data['id'])){
       reject({data : data, result : "error", message : "Error the file already exist", status : 400});
     }else{

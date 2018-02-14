@@ -40,9 +40,10 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "express": "^4.14.0",
     "bootstrap": "^4.0.0",
-    "jest": "^22.1.4",
+    "express": "^4.14.0",
+    "fs-extra": "^5.0.0",
+    "jest": "^22.2.0",
     "node-find-files": "0.0.4",
     "node-uuid": "^1.4.7"
   }
