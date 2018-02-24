@@ -20,7 +20,10 @@ class TabItems extends Component {
         method: 'DELETE',
       }).then(result => {
         result.json().then((res) => {
-            this.props.removeEpisode(res.message.data);
+            console.log(res);
+            if(res.result == 'success'){
+              this.props.removeEpisode(res.message.data);
+            }
             this.props.informationEpisode(res);
         })
       })
