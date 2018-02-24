@@ -18,7 +18,8 @@ class EditPage extends Component {
       id : this.props.match.params.id+'',
       name : '',
       code : '',
-      score : ''
+      score : '',
+      episodeBase : {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,6 +36,7 @@ class EditPage extends Component {
         this.setState({name: data.data.name});
         this.setState({code: data.data.code});
         this.setState({score: data.data.score});
+        this.setState({episodeBase: data.data});
       }else{
         this.info.showMessage(
           {
@@ -68,6 +70,10 @@ class EditPage extends Component {
               type: res.result
             }
           );
+          let episodeBase = this.state.episodeBase;
+          this.setState({name: episodeBase.name});
+          this.setState({code: episodeBase.code});
+          this.setState({score: episodeBase.score});
         }
     })
   }
