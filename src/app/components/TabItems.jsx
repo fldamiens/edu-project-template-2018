@@ -35,8 +35,8 @@ class TabItems extends Component {
               <td>{this.state.episode.code}</td>
               <td>{this.state.episode.score}</td>
               <td>
-                <button style={{marginLeft:'8px'}} className="btn btn-primary" onClick={() => {this.deleteEpisode(this.state.episode.id)}} >Delete</button>
-                <button style={{marginLeft:'8px'}} className="btn btn-primary">Detail</button>
+                <button style={{marginLeft:'8px'}} className="btn btn-info" onClick={() => {this.deleteEpisode(this.state.episode.id)}} >Delete</button>
+                <a style={{marginLeft:'8px'}} className="btn btn-info" href={"/" + this.state.episode.id} role="button">Detail</a>
               </td>
             </tr>
           </tbody>

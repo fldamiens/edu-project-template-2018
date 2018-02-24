@@ -65,7 +65,7 @@ class AddFileForm extends Component {
               <label>Score:</label>
               <input type="text" name="score" className="form-control"  placeholder="Score" onChange={this.handleInputChange}/>
             </div>
-            <button type="submit" className="btn btn-primary" >Submit</button>
+            <button type="submit" className="btn btn-info" >Submit</button>
           </form>
         );
     }

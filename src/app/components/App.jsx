@@ -11,13 +11,14 @@ import AddFileForm from './AddFileForm';
 import Header from './Header';
 import BoxInfo from './BoxInfo';
 import Footer from './Footer';
+import EditPage from './EditPage';
 import './../style/Style.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const store = configure();
 
-class MainApp extends Component {
+class MainPage extends Component {
 
     render() {
       const episodeAdded = (episode) => {
@@ -57,8 +58,8 @@ export default class App extends Component {
                 <Router>
                   <div>
                     <Header />
-                    <Route path="/" component={MainApp}>
-                    </Route>
+                    <Route exact path="/" component={MainPage}/>
+                    <Route path="/:id" component={EditPage}/>
                     <Footer />
                   </div>
                 </Router>
