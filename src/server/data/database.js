@@ -68,18 +68,24 @@ function find(id){
 function deleteFile(id){
   return new Promise(function(resolve,reject){
     readFile(pathData + "/episode_"+id).then(function(succ){
-      fs.unlink(pathData + "/episode_"+id, (err) => {
+      fs.unlink(pathData + "/episode_"+id, function(err){
         if(err == null){
           succ['message'] = 'The file was correctly removed';
           resolve(succ);
         }else{
-          succ['message'] = 'The file was not removed';
-          reject(succ);
+          var ret = {}
+          ret['message'] = 'The file was not removed';
+          ret['status'] = 400;
+          ret['result'] = 'error';
+          reject(ret);
         }
       });
     },function(err){
-      succ['message'] = 'An error occured during the treament';
-      reject(err);
+      var ret = {}
+      ret['message'] = 'An error occured during the treament';
+      ret['status'] = 500;
+      ret['result'] = 'error';
+      reject(ret);
     });
   });
 }

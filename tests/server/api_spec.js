@@ -104,9 +104,9 @@ describe('Method: DELETE / Path: /:id', function(){
   it ('Delete one false episode - return 400 File Not Found', function (done) {
     frisby.del(URL + '/false')
       .then(function(res){
-        expect(res.json.message.status).toBe(400);
+        expect(res.json.message.status).toBe(500);
         expect(res.json.message.result).toBe("error");
-        expect(res.json.message.message).toBe("Error when oppening the file");
+        expect(res.json.message.message).toBe("An error occured during the treament");
         expect(res.json.result).toBe("error");
       })
       .expect('status', 400)
