@@ -68,7 +68,7 @@ function find(id){
 function deleteFile(id){
   return new Promise(function(resolve,reject){
     readFile(pathData + "/episode_"+id).then(function(succ){
-      fs.unlink(pathData + "/episode_"+id);
+      fs.unlinkSync(pathData + "/episode_"+id);
       succ['message'] = 'The file was correctly removed';
       resolve(succ);
     },function(err){
