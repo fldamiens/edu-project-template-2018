@@ -47,17 +47,11 @@ class ListEpisodes extends Component {
       };
 
       const infoEpisode = (information) => {
-        this.info.showMessage(
-          {
-            message:information.message.message,
-            type: information.result
-          }
-        );
+        this.props.infoOccured(information);
       };
 
         return(
           <div>
-            <BoxInfo ref={info => { this.info = info; }}/>
             <table className="table table-striped">
               <TabHeader />
               {this.state.datas.map(function(ep, index){

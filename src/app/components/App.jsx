@@ -40,7 +40,7 @@ class MainPage extends Component {
             <BoxInfo ref={errorCpt => { this.info = errorCpt; }}/>
             <div className="row">
               <div className="col">
-                <ListEpisodes ref={list => { this.listCpt = list; }}/>
+                <ListEpisodes infoOccured={showMsg} ref={list => { this.listCpt = list; }}/>
               </div>
               <div className="col col-lg-2">
                   <AddFileForm infoOccured={showMsg}  addEpisode={episodeAdded}/>

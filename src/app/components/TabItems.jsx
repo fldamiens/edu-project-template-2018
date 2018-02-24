@@ -30,7 +30,7 @@ class TabItems extends Component {
         return(
           <tbody>
             <tr key={this.state.episode.id}>
-              <td>{this.state.episode.id}</td>
+              <td className="id">{this.state.episode.id}</td>
               <td>{this.state.episode.name}</td>
               <td>{this.state.episode.code}</td>
               <td>{this.state.episode.score}</td>

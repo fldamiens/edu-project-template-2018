@@ -1,12 +1,22 @@
 var chokidar = require('chokidar');
 var child_process = require('child_process');
 var sys = require("util");
+const fs = require('fs-extra');
 
 var server = {
     process: null,
     restarting: false,
     start: function() {
         console.log('Starting server');
+
+        fs.exists('./data', function(exist) {
+            if(!exist){
+              fs.mkdir('./data');
+              console.log('The directory data has been created');
+            }else{
+              console.log('The directory data is already present');
+            }
+        });
 
         var that = this;
 

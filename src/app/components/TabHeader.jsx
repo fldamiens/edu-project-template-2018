@@ -12,11 +12,11 @@ class TabHeader extends Component {
         return(
           <thead className="thead-default">
             <tr>
-              <th>Id</th>
-              <th>Serie</th>
-              <th>Season</th>
-              <th>Episode</th>
-              <th>Action</th>
+              <th className="col-md-2">Id</th>
+              <th >Serie</th>
+              <th >Season</th>
+              <th >Episode</th>
+              <th >Action</th>
             </tr>
           </thead>
         );
